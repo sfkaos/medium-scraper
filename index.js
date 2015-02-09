@@ -23,8 +23,8 @@ app.get('/', function(req,res) {
     postArr.forEach(function(post) {
       return medium.getPost(null, post.id, function(data) {
         console.log(data);
-        res.json(data);
       });
+      res.json(data);
     });
   });
 
