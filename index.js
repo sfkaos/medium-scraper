@@ -4,7 +4,6 @@ var medium = require('node-medium');
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-mongoose.connect('mongodb://localhost/rvmedium');
 
 var PostSchema = new Schema({
   name: String
