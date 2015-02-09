@@ -15,7 +15,7 @@ var mediumPostSchema = new Schema({
 });
 
 var mediumPost = mongoose.model('mediumPost', mediumPostSchema);
-mongoose.connect('mongodb://localhost/RVmediumPosts' || process.env.MONGOLAB_URI);
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/RVmediumPosts');
 
 var app = express();
 app.use(cors());
