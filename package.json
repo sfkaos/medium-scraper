@@ -1,0 +1,17 @@
+{
+  "name": "realventures",
+  "version": "1.0.0",
+  "description": "",
+  "main": "nodeMedium.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Harris",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.5.3",
+    "express": "^4.11.2",
+    "mongoose": "^3.8.23",
+    "node-medium": "0.0.1"
+  }
+}
