@@ -23,8 +23,8 @@ app.use(cors());
 
 
 app.get('/', function(req,res) {
-  // https://medium.com/@yelpmontreal
-  medium.getUser('yelpmontreal', function(data) {
+  // https://medium.com/@ShorensteinCtr
+  medium.getUser('ShorensteinCtr', function(data) {
     var postArr = data.posts;
     postArr.forEach(function(post) {
      medium.getPost(null, post.id, function(data) {
