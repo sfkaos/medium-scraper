@@ -47,7 +47,7 @@ app.get('/', function(req,res) {
 app.get('/:id', function(req,res) {
   return mediumPost.findById(req.params.id, function (err, post) {
     if (!err) {
-      return res.send(post);
+      return res.json(200, post);
     } else {
       return console.log(err);
     }
