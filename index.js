@@ -23,13 +23,15 @@ app.use(cors());
 
 
 app.get('/', function(req,res) {
-  // https://medium.com/@ShorensteinCtr
-  medium.getUser('ShorensteinCtr', function(data) {
+  // https://medium.com/@elleluna
+  medium.getUser('elleluna', function(data) {
+    //console.log(data);
     var postArr = data.posts;
     postArr.forEach(function(post) {
      medium.getPost(null, post.id, function(data) {
+       // console.log('data', data);
         mediumPost.update({title: data.title}, data, {upsert: true}, function(err) {
-          console.log('successfully saved', data);
+          //console.log('successfully saved', data.paragraphs[10]);
         });
       });
     });
@@ -40,5 +42,19 @@ app.get('/', function(req,res) {
   });
 
 });
+
+
+app.get('/:id', function(req,res) {
+  return mediumPost.findById(req.params.id, function (err, post) {
+
+    if (!err) {
+      console.log(post);
+      return res.send(post);
+    } else {
+      return console.log(err);
+    }
+  });
+});
+
 
 app.listen(process.env.PORT || 3000);
