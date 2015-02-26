@@ -24,7 +24,7 @@ app.use(cors());
 
 app.get('/', function(req,res) {
   // https://medium.com/@elleluna
-  medium.getUser('elleluna', function(data) {
+  medium.getUser('harrisrobinkalash', function(data) {
     //console.log(data);
     var postArr = data.posts;
     postArr.forEach(function(post) {
