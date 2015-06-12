@@ -8,11 +8,12 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var mediumPostSchema = new Schema({
-  //title: String,
+  title: String,
   // createdAt: { type: Date, default: Date.now },
   // subTitle: String,
   // author: {},
   // paragraphs: [],
+
   url: String,
   html: String,
   image: String,
@@ -65,6 +66,7 @@ app.get('/', function(req,res) {
 
         data.each(function(index, el) {
           var postURL = $(this).find('.postArticle a').attr('href');
+          var title = $(this).find('h2#title').text();
           var date = $(this).find('.postMetaInline-feedSummary .postMetaInline--supplemental a.link').text();
           console.log('postURL', postURL);
 
@@ -75,6 +77,7 @@ app.get('/', function(req,res) {
             //console.log('body of posts', $$('.site-main').html());
 
             var model = {
+              title: title,
               url: postURL,
               image: grafImage,
               date: date
