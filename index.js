@@ -54,6 +54,10 @@ app.get('/', function(req,res) {
 
     var url = 'https://medium.com/@elleluna';
 
+    function isNumeric(n) {
+      return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
     request(url, function(error, response, html)  {
       // First we'll check to make sure no errors occurred when making the request
         // Next, we'll utilize the cheerio library on the returned html which will essentially give us jQuery functionality
@@ -67,28 +71,30 @@ app.get('/', function(req,res) {
         data.each(function(index, el) {
           var postURL = $(this).find('.postArticle a').attr('href');
           var title = $(this).find('h2#title').text();
-          var date = $(this).find('.postMetaInline-feedSummary .postMetaInline--supplemental a.link').text();
-          console.log('postURL', postURL);
+          var d = $(this).find('.postMetaInline-feedSummary .postMetaInline--supplemental a.link').text();
+          var date = Date.parse(d);
 
-          request(postURL, function(error, response, html)  {
-            var $$ = cheerio.load(html);
-            var grafImage = $$('.graf-image').attr('src');
-            //console.log('dolla dolla',$$('.postArticle-content'));
-            //console.log('body of posts', $$('.site-main').html());
+          console.log('postURL', postURL, date);
 
-            var model = {
-              title: title,
-              url: postURL,
-              image: grafImage,
-              date: date
-            }
+          if(isNumeric(date)) {
+            request(postURL, function(error, response, html)  {
+              var $$ = cheerio.load(html);
+              var grafImage = $$('.graf-image').attr('src');
+              //console.log('dolla dolla',$$('.postArticle-content'));
+              //console.log('body of posts', $$('.site-main').html());
 
+              var model = {
+                title: title,
+                url: postURL,
+                image: grafImage,
+                date: date
+              }
 
-            mediumPost.update({url: postURL}, model, {upsert: true}, function(err) {
-              //console.log('successfully saved', $$);
+              mediumPost.update({url: postURL}, model, {upsert: true}, function(err) {
+                //console.log('successfully saved', $$);
+              });
             });
-
-          });
+          }
 
         });
       });
