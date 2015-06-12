@@ -17,7 +17,7 @@ var mediumPostSchema = new Schema({
   url: String,
   html: String,
   image: String,
-  date: String
+  date: { type: Date, default: Date.now }
 });
 
 var mediumPost = mongoose.model('mediumPost', mediumPostSchema);
