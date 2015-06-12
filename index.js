@@ -15,7 +15,8 @@ var mediumPostSchema = new Schema({
   // paragraphs: [],
   url: String,
   html: String,
-  image: String
+  image: String,
+  date: String
 });
 
 var mediumPost = mongoose.model('mediumPost', mediumPostSchema);
@@ -64,6 +65,7 @@ app.get('/', function(req,res) {
 
         data.each(function(index, el) {
           var postURL = $(this).find('.postArticle a').attr('href');
+          var date = $(this).find('.postMetaInline-feedSummary .postMetaInline--supplemental a.link').text();
           console.log('postURL', postURL);
 
           request(postURL, function(error, response, html)  {
@@ -74,7 +76,8 @@ app.get('/', function(req,res) {
 
             var model = {
               url: postURL,
-              image: grafImage
+              image: grafImage,
+              date: date
             }
 
 
