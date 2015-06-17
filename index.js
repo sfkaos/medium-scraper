@@ -74,36 +74,54 @@ app.get('/', function(req,res) {
           var d = $(this).find('.postMetaInline-feedSummary .postMetaInline--supplemental a.link').text();
           var date = Date.parse(d);
 
+
+          //grab postID from url by matching it with a regex
+          var isolateID = postURL.substr(postURL.lastIndexOf('-') + 1);
+          var postID = isolateID.substring(0,12);
+
+          var mediumTagsURL = 'https://medium.com/_/api/posts/' + postID + '/tags';
+
+          request(mediumTagsURL, function(error, response, html) {
+            //console.log('tags? is that you?', html);
+            var trimmed = html.substring(50);
+            var trimmed2 = trimmed.split(',')[0];
+            var plucked = trimmed2.split('"')[3];
+
+            var model = {
+              title: title,
+              url: postURL,
+              //image: grafImage,
+              date: date,
+              description: description,
+              tag: plucked
+            }
+
+            mediumPost.update({date: date}, model, {upsert: true},  function(err) {
+              console.log('successfully saved', model);
+            });
+
+          });
+
+
           if(isNumeric(date)) {
             request(postURL, function(error, response, html)  {
               var $$ = cheerio.load(html);
               var grafImage = $$('.graf-image').attr('src');
 
-              //grab postID from url by matching it with a regex
-              var isolateID = postURL.substr(postURL.lastIndexOf('-') + 1);
-              var postID = isolateID.substring(0,12);
-              var mediumTagsURL = 'https://medium.com/_/api/posts/' + postID + '/tags';
+              console.log('model', model);
+              var model = {
+                title: title,
+                url: postURL,
+                image: grafImage,
+                date: date,
+                description: description
+                //tag: plucked
+              }
 
-              request(mediumTagsURL, function(error, response, html) {
-                //console.log('tags? is that you?', html);
-                var trimmed = html.substring(50);
-                var trimmed2 = trimmed.split(',')[0];
-                var plucked = trimmed2.split('"')[3];
-
-                var model = {
-                  title: title,
-                  url: postURL,
-                  image: grafImage,
-                  date: date,
-                  description: description,
-                  tag: plucked
-                }
-
-                mediumPost.update({url: postURL}, model, {upsert: true}, function(err) {
-                  console.log('successfully saved', model);
-                });
-
+              mediumPost.update({date: date}, model, {upsert: true},  function(err) {
+                console.log('successfully saved', model);
               });
+
 
             });
           }
