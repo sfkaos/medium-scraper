@@ -19,6 +19,7 @@ var mediumPostSchema = new Schema({
   date: { type: Date, default: Date.now },
   description: String,
   tag: String
+
 });
 
 var mediumPost = mongoose.model('mediumPost', mediumPostSchema);
@@ -86,6 +87,8 @@ app.get('/', function(req,res) {
             var trimmed = html.substring(50);
             var trimmed2 = trimmed.split(',')[0];
             var plucked = trimmed2.split('"')[3];
+
+            plucked === undefined ? plucked = 'uncategorized' : null;
 
             var model = {
               title: title,
