@@ -54,7 +54,7 @@ app.use(cors());
 
 app.get('/', function(req,res) {
 
-    var url = 'https://medium.com/@elleluna';
+    var url = 'https://medium.com/@realventures';
 
     function isNumeric(n) {
       return !isNaN(parseFloat(n)) && isFinite(n);
