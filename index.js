@@ -1,10 +1,10 @@
 var express = require('express');
-var cors    = require("cors");
+var cors = require("cors");
 var request = require('request');
 var cheerio = require('cheerio');
 
 var mongoose = require('mongoose'),
-    Schema   = mongoose.Schema;
+  Schema = mongoose.Schema;
 
 var mediumPostSchema = new Schema({
   title: String,
@@ -15,7 +15,10 @@ var mediumPostSchema = new Schema({
   url: String,
   html: String,
   image: String,
-  date: {type: Date, default: Date.now},
+  date: {
+    type: Date,
+    default: Date.now
+  },
   description: String,
   tag: String
 
@@ -50,7 +53,8 @@ app.use(cors());
 
 // });
 
-app.get('/', function (req, res) {
+
+app.get('/', function(req, res) {
 
   var url = 'https://medium.com/@realventures';
 
@@ -58,22 +62,22 @@ app.get('/', function (req, res) {
     return !isNaN(parseFloat(n)) && isFinite(n);
   }
 
-  request(url, function (error, response, html) {
+  request(url, function(error, response, html) {
     // First we'll check to make sure no errors occurred when making the request
     // Next, we'll utilize the cheerio library on the returned html which will essentially give us jQuery functionality
     var $ = cheerio.load(html);
 
-    $('.blockGroup--latest.blockGroup--posts.blockGroup--list .block.block--list').filter(function () {
+    $('.blockGroup--latest.blockGroup--posts.blockGroup--list .block.block--list').filter(function() {
       var data = $(this);
 
 
-      data.each(function (index, el) {
-        var postURL     = $(this).find('.postArticle a').attr('href');
-        var title       = $(this).find('.graf--h2').text();
+      data.each(function(index, el) {
+        var postURL = $(this).find('.postArticle a').attr('href');
+        var title = $(this).find('.graf--h2').text();
         var description = $(this).find('h4#subtitle').text() || $(this).find('p.graf--p').text();
-        var d           = $(this).find('.postMetaInline-feedSummary .postMetaInline--supplemental a.link').text();
+        var d = $(this).find('.postMetaInline-feedSummary .postMetaInline--supplemental a.link').text();
         var date;
-        if(isNumeric(date)) {
+        if (isNumeric(date)) {
           date = Date.parse(d);
         } else {
           date = Date.now();
@@ -82,15 +86,15 @@ app.get('/', function (req, res) {
 
         //grab postID from url by matching it with a regex
         var isolateID = postURL.substr(postURL.lastIndexOf('-') + 1);
-        var postID    = isolateID.substring(0, 12);
+        var postID = isolateID.substring(0, 12);
 
         var mediumTagsURL = 'https://medium.com/_/api/posts/' + postID + '/tags';
 
-        request(mediumTagsURL, function (error, response, html) {
+        request(mediumTagsURL, function(error, response, html) {
           //console.log('tags? is that you?', html);
-          var trimmed  = html.substring(50);
+          var trimmed = html.substring(50);
           var trimmed2 = trimmed.split(',')[0];
-          var plucked  = trimmed2.split('"')[3];
+          var plucked = trimmed2.split('"')[3];
 
           plucked === undefined ? plucked = 'uncategorized' : null;
 
@@ -103,27 +107,41 @@ app.get('/', function (req, res) {
             tag: plucked
           }
 
-          mediumPost.update({title: model.title}, model, {upsert: true},  function(err) {
+          mediumPost.update({
+            title: model.title
+          }, model, {
+            upsert: true
+          }, function(err) {
             console.log('successfully saved', model);
           });
 
         });
 
 
-        request(postURL, function(error, response, html)  {
-          var grafImage = $('.graf-image').attr('src');
+        request(postURL, function(error, response, html) {
+          var $$ = cheerio.load(html);
+          var grafImage = $$('.section-backgroundImage').css('background-image');
+          var grafImage = /^url\((['"]?)(.*)\1\)$/.exec(grafImage);
 
-          console.log('model', model);
+          grafImage = grafImage ? grafImage[2] : false;
+          if (grafImage) {
+            console.log('backgorund image!', grafImage);
+          }
+
           var model = {
             title: title,
             url: postURL,
             image: grafImage,
             date: date,
             description: description
-            //tag: plucked
+              //tag: plucked
           }
-
-          mediumPost.update({title: model.title}, model, {upsert: true},  function(err) {
+          console.log('model', model);
+          mediumPost.update({
+            title: model.title
+          }, model, {
+            upsert: true
+          }, function(err) {
             console.log('successfully saved date numeric', model);
           });
         });
@@ -133,7 +151,7 @@ app.get('/', function (req, res) {
     });
   });
 
-  mediumPost.find(function (err, posts) {
+  mediumPost.find(function(err, posts) {
     return res.json(200, posts);
   });
 
@@ -141,6 +159,7 @@ app.get('/', function (req, res) {
 
 
 // app.get('/:id', function(req,res) {
+
 //   return mediumPost.findById(req.params.id, function (err, post) {
 //     if (!err) {
 //       return res.json(200, post);
