@@ -69,7 +69,7 @@ app.get('/', function (req, res) {
 
       data.each(function (index, el) {
         var postURL     = $(this).find('.postArticle a').attr('href');
-        var title       = $(this).find('h2#title').text();
+        var title       = $(this).find('.graf--h2').text();
         var description = $(this).find('h4#subtitle').text() || $(this).find('p.graf--p').text();
         var d           = $(this).find('.postMetaInline-feedSummary .postMetaInline--supplemental a.link').text();
         var date;
