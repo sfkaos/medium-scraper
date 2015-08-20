@@ -68,6 +68,7 @@ app.get('/', function(req,res) {
       $('.blockGroup--latest.blockGroup--posts.blockGroup--list .block.block--list').filter(function() {
         var data = $(this);
 
+
         data.each(function(index, el) {
           var postURL = $(this).find('.postArticle a').attr('href');
           var title = $(this).find('h2#title').text();
