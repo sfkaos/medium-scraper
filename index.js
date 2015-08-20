@@ -103,7 +103,7 @@ app.get('/', function (req, res) {
             tag: plucked
           }
 
-          mediumPost.update({}, model, {upsert: true},  function(err) {
+          mediumPost.update({date: model.date}, model, {upsert: true},  function(err) {
             console.log('successfully saved', model);
           });
 
@@ -123,7 +123,7 @@ app.get('/', function (req, res) {
             //tag: plucked
           }
 
-          mediumPost.update({}, model, {upsert: true},  function(err) {
+          mediumPost.update({date: model.date}, model, {upsert: true},  function(err) {
             console.log('successfully saved date numeric', model);
           });
         });
