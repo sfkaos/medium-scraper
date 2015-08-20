@@ -1,6 +1,5 @@
 var express = require('express');
 var cors = require("cors");
-var medium = require('node-medium');
 var request = require('request');
 var cheerio = require('cheerio');
 
