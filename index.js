@@ -111,8 +111,7 @@ app.get('/', function (req, res) {
 
 
         request(postURL, function(error, response, html)  {
-          var $$ = cheerio.load(html);
-          var grafImage = $$('.graf-image').attr('src');
+          var grafImage = $('.graf-image').attr('src');
 
           console.log('model', model);
           var model = {
