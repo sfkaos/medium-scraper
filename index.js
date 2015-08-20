@@ -110,28 +110,25 @@ app.get('/', function (req, res) {
         });
 
 
-        if(isNumeric(date)) {
-          request(postURL, function(error, response, html)  {
-            var $$ = cheerio.load(html);
-            var grafImage = $$('.graf-image').attr('src');
+        request(postURL, function(error, response, html)  {
+          var $$ = cheerio.load(html);
+          var grafImage = $$('.graf-image').attr('src');
 
-            console.log('model', model);
-            var model = {
-              title: title,
-              url: postURL,
-              image: grafImage,
-              date: date,
-              description: description
-              //tag: plucked
-            }
+          console.log('model', model);
+          var model = {
+            title: title,
+            url: postURL,
+            image: grafImage,
+            date: date,
+            description: description
+            //tag: plucked
+          }
 
-            mediumPost.update({}, model, {upsert: true},  function(err) {
-              console.log('successfully saved date numeric', model);
-            });
-
-
+          mediumPost.update({}, model, {upsert: true},  function(err) {
+            console.log('successfully saved date numeric', model);
           });
-        }
+        });
+
 
       });
     });
