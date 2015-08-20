@@ -121,7 +121,7 @@ app.get('/', function(req,res) {
                 //tag: plucked
               }
 
-              mediumPost.update({date: date}, model, {upsert: true},  function(err) {
+              mediumPost.update({title: title}, model, {upsert: true},  function(err) {
                 console.log('successfully saved', model);
               });
 
